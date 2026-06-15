@@ -955,7 +955,7 @@ function SubmitShow({ onSubmitShow }) {
       sourceUrl: "",
     });
 
-    setMessage("Show submitted for admin review. It will appear publicly after approval.");
+    setMessage("Show submitted and added to Discover.");
   }
 
   return (
@@ -997,103 +997,6 @@ function SubmitShow({ onSubmitShow }) {
             Shows submitted here appear on Discover so comedy lovers can browse what is happening near them.
           </p>
         </Card>
-      </section>
-    </main>
-  );
-}
-
-function AdminReview({ pendingShows, approveShow, rejectShow }) {
-  return (
-    <main className="mx-auto max-w-7xl px-6 py-8">
-      <PageHeader
-        label="Admin Review"
-        title="Approve accurate public listings."
-        text="Submitted shows stay private until they are reviewed. Approved shows become verified JokeFlow listings."
-      />
-
-      <section className="grid gap-5 md:grid-cols-3">
-        <StatCard
-          label="Pending shows"
-          value={pendingShows.length}
-          text="Review these before they appear publicly."
-        />
-        <StatCard
-          label="Accuracy model"
-          value="Verify first"
-          text="No show becomes public until approved."
-        />
-        <StatCard
-          label="Public trust"
-          value="Higher"
-          text="Comedy lovers see cleaner, verified listings."
-        />
-      </section>
-
-      <section className="mt-8">
-        <Label>Pending submissions</Label>
-
-        {pendingShows.length === 0 && (
-          <Card className="mt-4">
-            <h3 className="text-2xl font-black">No pending shows.</h3>
-            <p className="mt-2 text-sm leading-6 text-zinc-600">
-              New show submissions will appear here for approval.
-            </p>
-          </Card>
-        )}
-
-        <div className="mt-4 grid gap-5 md:grid-cols-3">
-          {pendingShows.map((show) => (
-            <Card key={show.id}>
-              <Label>{show.type}</Label>
-              <h3 className="mt-2 text-2xl font-black">{show.title}</h3>
-              <p className="mt-2 text-sm font-semibold text-zinc-500">
-                {show.venue} · {show.city}
-              </p>
-
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                <Stat value={show.date} label="Date" />
-                <Stat value={show.price || "TBD"} label="Price" />
-              </div>
-
-              <p className="mt-4 text-sm leading-6 text-zinc-600">
-                {show.notes || "No notes provided."}
-              </p>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                {show.ticketLink && (
-                  <a
-                    href={show.ticketLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex rounded-full bg-fuchsia-600 px-5 py-3 text-sm font-black text-white"
-                  >
-                    Check Ticket Link
-                  </a>
-                )}
-
-                {show.sourceUrl && (
-                  <a
-                    href={show.sourceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex rounded-full bg-zinc-950 px-5 py-3 text-sm font-black text-white"
-                  >
-                    Check Source
-                  </a>
-                )}
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                <Button variant="green" onClick={() => approveShow(show.id)}>
-                  Approve
-                </Button>
-                <Button variant="outline" onClick={() => rejectShow(show.id)}>
-                  Reject
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
       </section>
     </main>
   );
@@ -1155,45 +1058,16 @@ function StatCard({ label, value, text }) {
 export default function App() {
   const [role, setRole] = useState(() => loadStored("jokeflow_role", "lover"));
   const [page, setPage] = useState("home");
-  const [shows, setShows] = useState(() => loadStored("jokeflow_verified_shows", starterShows));
-  const [pendingShows, setPendingShows] = useState(() => loadStored("jokeflow_pending_shows", []));
+  const [shows, setShows] = useState(() => loadStored("jokeflow_shows", starterShows));
   const [comedians, setComedians] = useState(() => loadStored("jokeflow_comedians", starterComedians));
 
   useEffect(() => saveStored("jokeflow_role", role), [role]);
-  useEffect(() => saveStored("jokeflow_verified_shows", shows), [shows]);
-  useEffect(() => saveStored("jokeflow_pending_shows", pendingShows), [pendingShows]);
+  useEffect(() => saveStored("jokeflow_shows", shows), [shows]);
   useEffect(() => saveStored("jokeflow_comedians", comedians), [comedians]);
 
   function submitShow(show) {
-    setPendingShows((current) => [
-      {
-        ...show,
-        status: "Pending Review",
-        submittedAt: new Date().toISOString(),
-      },
-      ...current,
-    ]);
-    setPage("admin-review");
-  }
-
-  function approveShow(showId) {
-    const show = pendingShows.find((item) => item.id === showId);
-    if (!show) return;
-
-    setShows((current) => [
-      {
-        ...show,
-        status: "Published",
-        verifiedAt: new Date().toISOString(),
-      },
-      ...current,
-    ]);
-
-    setPendingShows((current) => current.filter((item) => item.id !== showId));
-  }
-
-  function rejectShow(showId) {
-    setPendingShows((current) => current.filter((item) => item.id !== showId));
+    setShows((current) => [show, ...current]);
+    setPage("discover");
   }
 
   const roleNav = {
@@ -1216,7 +1090,6 @@ export default function App() {
       ["booker-dashboard", "Dashboard"],
       ["booker-search", "Search Comics"],
       ["submit", "Submit Show"],
-      ["admin-review", "Admin Review"],
       ["global-search", "World Search"],
       ["pricing", "Pricing"],
     ],
@@ -1282,13 +1155,6 @@ export default function App() {
       {page === "booker-dashboard" && <BookerDashboard comedians={comedians} setPage={setPage} />}
       {page === "booker-search" && <BookerSearch comedians={comedians} setPage={setPage} />}
       {page === "submit" && <SubmitShow onSubmitShow={submitShow} />}
-      {page === "admin-review" && (
-        <AdminReview
-          pendingShows={pendingShows}
-          approveShow={approveShow}
-          rejectShow={rejectShow}
-        />
-      )}
       {page === "pricing" && <Pricing setRole={setRole} setPage={setPage} />}
     </div>
   );
