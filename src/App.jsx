@@ -104,6 +104,8 @@ const starterShows = [
     price: "$15",
     status: "Published",
     notes: "Local showcase with rotating comics.",
+    ticketLink: "",
+    sourceUrl: "",
   },
   {
     id: "show-2",
@@ -115,6 +117,8 @@ const starterShows = [
     price: "Free",
     status: "Published",
     notes: "Signup before showtime.",
+    ticketLink: "",
+    sourceUrl: "",
   },
   {
     id: "show-3",
@@ -126,6 +130,8 @@ const starterShows = [
     price: "$10",
     status: "Published",
     notes: "Producer-reviewed showcase.",
+    ticketLink: "",
+    sourceUrl: "",
   },
 ];
 
@@ -428,7 +434,23 @@ function Discover({ shows, setPage }) {
               <Stat value={show.price || "TBD"} label="Price" />
             </div>
             <p className="mt-4 text-sm leading-6 text-zinc-600">{show.notes}</p>
-            <Button className="mt-5 w-full">View Show</Button>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {show.ticketLink && (
+                <a href={show.ticketLink} target="_blank" rel="noreferrer" className="inline-flex rounded-full bg-fuchsia-600 px-5 py-3 text-sm font-black text-white">
+                  Tickets / RSVP
+                </a>
+              )}
+              {show.sourceUrl && (
+                <a href={show.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex rounded-full bg-zinc-950 px-5 py-3 text-sm font-black text-white">
+                  Verified Source
+                </a>
+              )}
+              {!show.ticketLink && !show.sourceUrl && (
+                <span className="inline-flex rounded-full bg-zinc-100 px-5 py-3 text-sm font-black text-zinc-600">
+                  Verified JokeFlow listing
+                </span>
+              )}
+            </div>
           </Card>
         ))}
       </div>
@@ -460,7 +482,10 @@ function GlobalSearch() {
       const response = await fetch(`/api/search?${params.toString()}`);
       const data = await response.json();
 
-      setMessage(data.warning || `Source-backed results from ${data.source || "search"}. Query: ${data.query}`);
+      setMessage(
+        data.warning ||
+        `${data.source || "Live search"} · Checked ${new Date(data.checkedAt || Date.now()).toLocaleString()} · Query: ${data.query}`
+      );
       setResults(data.results || []);
     } catch (err) {
       setMessage(err.message || "Search failed.");
@@ -527,7 +552,19 @@ function GlobalSearch() {
           <Card key={`${item.title}-${index}`}>
             <Label>{item.category || "Result"}</Label>
             <h3 className="mt-2 text-xl font-black">{item.title}</h3>
-            <p className="mt-2 text-xs font-bold uppercase tracking-widest text-zinc-400">{item.location} · {item.status} · {item.verification || 'Verify on source'}</p>
+            <p className="mt-2 text-xs font-bold uppercase tracking-widest text-zinc-400">
+              {item.location} · {item.status} · {item.verification || "Verify on source"}
+            </p>
+            {item.checkedAt && (
+              <p className="mt-2 text-xs font-bold text-zinc-500">
+                Checked {new Date(item.checkedAt).toLocaleString()}
+              </p>
+            )}
+            {item.displayedLink && (
+              <p className="mt-2 truncate text-xs font-bold text-zinc-400">
+                Source: {item.displayedLink}
+              </p>
+            )}
             <p className="mt-3 text-sm leading-6 text-zinc-600">{item.snippet}</p>
             {item.link && (
               <a href={item.link} target="_blank" rel="noreferrer" className="mt-5 inline-flex rounded-full bg-zinc-950 px-5 py-3 text-sm font-black text-white">
@@ -880,6 +917,8 @@ function SubmitShow({ onSubmitShow }) {
     producerEmail: "",
     type: "Showcase",
     notes: "",
+    ticketLink: "",
+    sourceUrl: "",
   });
   const [message, setMessage] = useState("");
 
@@ -912,6 +951,8 @@ function SubmitShow({ onSubmitShow }) {
       producerEmail: "",
       type: "Showcase",
       notes: "",
+      ticketLink: "",
+      sourceUrl: "",
     });
 
     setMessage("Show submitted and added to Discover.");
@@ -935,6 +976,8 @@ function SubmitShow({ onSubmitShow }) {
             <input value={form.date} onChange={(e) => update("date", e.target.value)} placeholder="Date" className="mt-3 w-full rounded-2xl border px-4 py-3 text-sm font-semibold outline-none" />
             <input value={form.price} onChange={(e) => update("price", e.target.value)} placeholder="Price" className="mt-3 w-full rounded-2xl border px-4 py-3 text-sm font-semibold outline-none" />
             <input value={form.producerEmail} onChange={(e) => update("producerEmail", e.target.value)} placeholder="Producer email" className="mt-3 w-full rounded-2xl border px-4 py-3 text-sm font-semibold outline-none" />
+            <input value={form.ticketLink} onChange={(e) => update("ticketLink", e.target.value)} placeholder="Ticket link, Eventbrite, venue page, or RSVP link" className="mt-3 w-full rounded-2xl border px-4 py-3 text-sm font-semibold outline-none" />
+            <input value={form.sourceUrl} onChange={(e) => update("sourceUrl", e.target.value)} placeholder="Verification/source link if different" className="mt-3 w-full rounded-2xl border px-4 py-3 text-sm font-semibold outline-none" />
             <select value={form.type} onChange={(e) => update("type", e.target.value)} className="mt-3 w-full rounded-2xl border px-4 py-3 text-sm font-semibold outline-none">
               <option>Showcase</option>
               <option>Open Mic</option>
