@@ -158,11 +158,11 @@ function gradeValue(grade) {
 
 function Button({ children, onClick, variant = "dark", className = "", type = "button" }) {
   const styles = {
-    dark: "bg-zinc-950 text-white border-zinc-950 hover:bg-zinc-800 shadow-[0_12px_30px_rgba(9,9,11,.18)]",
-    light: "bg-white text-zinc-950 border-white hover:bg-zinc-100 shadow-[0_12px_30px_rgba(255,255,255,.15)]",
-    outline: "bg-white/80 text-zinc-950 border-zinc-200 hover:bg-white",
-    pink: "bg-fuchsia-600 text-white border-fuchsia-600 hover:bg-fuchsia-500 shadow-[0_12px_30px_rgba(217,70,239,.24)]",
-    cyan: "bg-cyan-400 text-zinc-950 border-cyan-400 hover:bg-cyan-300 shadow-[0_12px_30px_rgba(34,211,238,.20)]",
+    dark: "bg-zinc-950 text-white border-zinc-950 hover:bg-zinc-800",
+    light: "bg-white text-zinc-950 border-white hover:bg-zinc-100",
+    outline: "bg-white text-zinc-950 border-zinc-200 hover:bg-zinc-50",
+    pink: "bg-fuchsia-600 text-white border-fuchsia-600 hover:bg-fuchsia-500",
+    cyan: "bg-cyan-400 text-zinc-950 border-cyan-400 hover:bg-cyan-300",
     green: "bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-500",
   };
 
@@ -170,7 +170,7 @@ function Button({ children, onClick, variant = "dark", className = "", type = "b
     <button
       type={type}
       onClick={onClick}
-      className={`jf-focus inline-flex items-center justify-center rounded-full border px-5 py-3 text-sm font-black tracking-tight transition hover:-translate-y-0.5 active:translate-y-0 ${styles[variant]} ${className}`}
+      className={`rounded-full border px-5 py-3 text-sm font-black transition hover:-translate-y-0.5 ${styles[variant]} ${className}`}
     >
       {children}
     </button>
@@ -178,19 +178,11 @@ function Button({ children, onClick, variant = "dark", className = "", type = "b
 }
 
 function Card({ children, className = "" }) {
-  return (
-    <div className={`jf-card rounded-[1.75rem] p-6 ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`rounded-[1.75rem] border border-zinc-200 bg-white p-6 shadow-sm ${className}`}>{children}</div>;
 }
 
 function Label({ children }) {
-  return (
-    <p className="text-xs font-black uppercase tracking-[0.2em] text-fuchsia-700">
-      {children}
-    </p>
-  );
+  return <p className="text-xs font-black uppercase tracking-[0.18em] text-fuchsia-700">{children}</p>;
 }
 
 function Grade({ grade }) {
@@ -205,17 +197,13 @@ function Grade({ grade }) {
 function Brand() {
   return (
     <div className="flex items-center gap-3">
-      <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-zinc-950 shadow-[0_18px_45px_rgba(9,9,11,.22)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#d946ef,transparent_38%),radial-gradient(circle_at_85%_15%,#22d3ee,transparent_36%)]" />
-        <span className="relative text-xl font-black text-white">J</span>
+      <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-zinc-950">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#fb7185,transparent_35%),radial-gradient(circle_at_85%_15%,#22d3ee,transparent_34%)]" />
+        <span className="relative text-lg font-black text-white">J</span>
       </div>
       <div>
-        <h1 className="text-2xl font-black tracking-tight">
-          Joke<span className="jf-gradient-text">Flow</span>
-        </h1>
-        <p className="text-xs font-bold text-zinc-500">
-          Comedy profiles, clips, shows, and booking tools.
-        </p>
+        <h1 className="text-2xl font-black tracking-tight">JokeFlow</h1>
+        <p className="text-xs font-semibold text-zinc-500">Comedy profiles, clips, shows, and booking tools.</p>
       </div>
     </div>
   );
@@ -223,19 +211,11 @@ function Brand() {
 
 function PageHeader({ label, title, text, children }) {
   return (
-    <section className="jf-surface relative mb-8 overflow-hidden rounded-[2.25rem] p-8 text-white shadow-[0_28px_80px_rgba(9,9,11,.22)] md:p-10">
-      <div className="relative">
-        <p className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/75">
-          {label}
-        </p>
-        <h2 className="mt-5 max-w-4xl text-4xl font-black leading-tight tracking-tight md:text-6xl">
-          {title}
-        </h2>
-        <p className="mt-4 max-w-2xl text-sm leading-6 text-white/70 md:text-base">
-          {text}
-        </p>
-        {children && <div className="mt-6">{children}</div>}
-      </div>
+    <section className="mb-8 rounded-[2.25rem] bg-zinc-950 p-8 text-white md:p-10">
+      <Label>{label}</Label>
+      <h2 className="mt-3 max-w-4xl text-4xl font-black leading-tight tracking-tight md:text-6xl">{title}</h2>
+      <p className="mt-4 max-w-2xl text-sm leading-6 text-white/70 md:text-base">{text}</p>
+      {children && <div className="mt-6">{children}</div>}
     </section>
   );
 }
@@ -269,47 +249,6 @@ function RolePicker({ role, setRole, setPage }) {
 }
 
 function Home({ role, setRole, setPage }) {
-  const roleDetails = {
-    lover: {
-      label: "Comedy Lover",
-      title: "Find comedy near you and anywhere you travel.",
-      text: "Browse local shows, discover comedians, and search comedy scenes around the world.",
-      primary: ["discover", "Find local comedy"],
-      secondary: ["global-search", "Search the world"],
-      cards: [
-        ["Discover shows", "Browse comedy shows, open mics, and local events.", "discover"],
-        ["Search the world", "Look up comedians, shows, festivals, and venues anywhere.", "global-search"],
-        ["Browse comics", "Find bookable comedians and watch public clips.", "comedians"],
-      ],
-    },
-    comedian: {
-      label: "Comedian",
-      title: "Build a booker-ready comedy profile.",
-      text: "Upload clips, choose what bookers see, keep work tapes private, and make your profile easy to send.",
-      primary: ["comic-dashboard", "Edit my profile"],
-      secondary: ["discover", "Find shows"],
-      cards: [
-        ["Clip Studio", "Add video links, uploads, captions, grades, and visibility settings.", "comic-dashboard"],
-        ["Booker profile", "Preview your public profile with clips, credits, and booking CTA.", "comedians"],
-        ["Find opportunities", "Search shows, festivals, open mics, and comedy scenes worldwide.", "global-search"],
-      ],
-    },
-    booker: {
-      label: "Booker",
-      title: "Find comics and publish your shows.",
-      text: "Search comedians by city and grade, review booker-facing clips, and submit shows to the local board.",
-      primary: ["booker-search", "Search comics"],
-      secondary: ["submit", "Submit a show"],
-      cards: [
-        ["Search comedians", "Filter comics by location, style, grade, and public clips.", "booker-search"],
-        ["Submit shows", "Add showcases, open mics, booked shows, and festivals.", "submit"],
-        ["Global research", "Search comedy scenes, festivals, venues, and bookers worldwide.", "global-search"],
-      ],
-    },
-  };
-
-  const current = roleDetails[role] || roleDetails.lover;
-
   return (
     <main className="mx-auto max-w-7xl px-6 py-8">
       <section className="grid gap-6 lg:grid-cols-[1.15fr_.85fr]">
@@ -317,55 +256,32 @@ function Home({ role, setRole, setPage }) {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(236,72,153,.65),transparent_28%),radial-gradient(circle_at_90%_20%,rgba(34,211,238,.45),transparent_28%)]" />
           <div className="relative">
             <p className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white/80">
-              {current.label} dashboard
+              One app · three experiences
             </p>
             <h2 className="mt-6 max-w-4xl text-5xl font-black leading-[0.95] tracking-tight md:text-7xl">
-              {current.title}
+              Comedy discovery, profiles, clips, and booking in one flow.
             </h2>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-white/72">
-              {current.text}
+              JokeFlow changes depending on who is using it: comedy lovers find shows, comedians build clip-ready profiles, and bookers find talent.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button variant="light" onClick={() => setPage(current.primary[0])}>
-                {current.primary[1]}
-              </Button>
-              <Button variant="pink" onClick={() => setPage(current.secondary[0])}>
-                {current.secondary[1]}
-              </Button>
+              <Button variant="light" onClick={() => { setRole("lover"); setPage("discover"); }}>I love comedy</Button>
+              <Button variant="light" onClick={() => { setRole("comedian"); setPage("comic-dashboard"); }}>I’m a comedian</Button>
+              <Button variant="pink" onClick={() => { setRole("booker"); setPage("booker-dashboard"); }}>I book shows</Button>
             </div>
           </div>
         </div>
 
         <Card>
-          <Label>Switch experience</Label>
+          <Label>Choose your flow</Label>
           <div className="mt-5">
             <RolePicker role={role} setRole={setRole} setPage={setPage} />
           </div>
         </Card>
       </section>
-
-      <section className="mt-8">
-        <Label>Recommended next steps</Label>
-        <div className="mt-4 grid gap-5 md:grid-cols-3">
-          {current.cards.map(([title, text, target]) => (
-            <button
-              key={title}
-              onClick={() => setPage(target)}
-              className="rounded-[1.75rem] border border-zinc-200 bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-            >
-              <h3 className="text-2xl font-black">{title}</h3>
-              <p className="mt-3 text-sm leading-6 text-zinc-600">{text}</p>
-              <span className="mt-5 inline-flex rounded-full bg-zinc-950 px-5 py-3 text-sm font-black text-white">
-                Open
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
     </main>
   );
 }
-
 
 function Discover({ shows, setPage }) {
   const [city, setCity] = useState("Denver");
@@ -403,7 +319,7 @@ function Discover({ shows, setPage }) {
         title="Find comedy near you."
         text="Browse comedy shows, open mics, and events by city. This is the free fan-facing side of JokeFlow."
       >
-        <Button variant="light" onClick={() => setPage("global-search")}>Search the world</Button>
+        <Button variant="light" onClick={() => setPage("global-search")}>Search worldwide</Button>
       </PageHeader>
 
       <Card>
@@ -460,7 +376,7 @@ function GlobalSearch() {
       const response = await fetch(`/api/search?${params.toString()}`);
       const data = await response.json();
 
-      setMessage(data.warning || `Source-backed results from ${data.source || "search"}. Query: ${data.query}`);
+      setMessage(data.warning || `Showing results from ${data.source || "search"}. Query: ${data.query}`);
       setResults(data.results || []);
     } catch (err) {
       setMessage(err.message || "Search failed.");
@@ -490,9 +406,9 @@ function GlobalSearch() {
   return (
     <main className="mx-auto max-w-7xl px-6 py-8">
       <PageHeader
-        label="World Search"
-        title="Search comedians, shows, festivals, open mics, venues, and bookers anywhere."
-        text="Search live source-backed results. Always open the linked source to verify dates, prices, lineups, and submission rules."
+        label="Worldwide Search"
+        title="Search comedians, shows, and festivals anywhere."
+        text="Use this to research comedy scenes around the world without saving anything into the app."
       />
 
       <Card>
@@ -527,7 +443,7 @@ function GlobalSearch() {
           <Card key={`${item.title}-${index}`}>
             <Label>{item.category || "Result"}</Label>
             <h3 className="mt-2 text-xl font-black">{item.title}</h3>
-            <p className="mt-2 text-xs font-bold uppercase tracking-widest text-zinc-400">{item.location} · {item.status} · {item.verification || 'Verify on source'}</p>
+            <p className="mt-2 text-xs font-bold uppercase tracking-widest text-zinc-400">{item.location} · {item.status}</p>
             <p className="mt-3 text-sm leading-6 text-zinc-600">{item.snippet}</p>
             {item.link && (
               <a href={item.link} target="_blank" rel="noreferrer" className="mt-5 inline-flex rounded-full bg-zinc-950 px-5 py-3 text-sm font-black text-white">
@@ -735,7 +651,7 @@ function ComedianProfileCard({ comic, showPrivate = false }) {
 
   return (
     <Card className="overflow-hidden p-0">
-      <div className="jf-surface h-40" />
+      <div className="h-40 bg-[radial-gradient(circle_at_10%_10%,rgba(236,72,153,.65),transparent_30%),radial-gradient(circle_at_90%_20%,rgba(34,211,238,.45),transparent_32%),linear-gradient(135deg,#18181b,#27272a)]" />
       <div className="p-6">
         <div className="-mt-16 flex flex-wrap items-end justify-between gap-4">
           <div className="flex items-end gap-4">
@@ -766,7 +682,7 @@ function ComedianProfileCard({ comic, showPrivate = false }) {
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
             {clips.map((clip) => (
               <div key={clip.id || clip.title} className="rounded-[1.5rem] bg-zinc-950 p-4 text-white">
-                <div className="jf-clip-frame aspect-[9/12] rounded-2xl" />
+                <div className="aspect-[9/12] rounded-2xl bg-[radial-gradient(circle_at_30%_20%,rgba(236,72,153,.65),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(34,211,238,.45),transparent_30%),linear-gradient(135deg,#27272a,#09090b)]" />
                 <div className="mt-4 flex items-start justify-between gap-3">
                   <div>
                     <p className="font-black">{clip.title}</p>
@@ -1031,7 +947,7 @@ export default function App() {
     lover: [
       ["home", "Home"],
       ["discover", "Discover"],
-      ["global-search", "World Search"],
+      ["global-search", "Global Search"],
       ["comedians", "Comedians"],
       ["pricing", "Pricing"],
     ],
@@ -1039,7 +955,7 @@ export default function App() {
       ["home", "Home"],
       ["comic-dashboard", "My Profile"],
       ["discover", "Shows"],
-      ["global-search", "World Search"],
+      ["global-search", "Global Search"],
       ["pricing", "Pricing"],
     ],
     booker: [
@@ -1047,7 +963,7 @@ export default function App() {
       ["booker-dashboard", "Dashboard"],
       ["booker-search", "Search Comics"],
       ["submit", "Submit Show"],
-      ["global-search", "World Search"],
+      ["global-search", "Global Search"],
       ["pricing", "Pricing"],
     ],
   };
@@ -1055,12 +971,12 @@ export default function App() {
   const nav = roleNav[role] || roleNav.lover;
 
   return (
-    <div className="min-h-screen text-zinc-950">
-      <header className="sticky top-0 z-20 border-b border-[#e7e2d8] bg-[#faf6ee]/88 backdrop-blur-xl">
+    <div className="min-h-screen bg-[#f8f5ef] text-zinc-950">
+      <header className="sticky top-0 z-20 border-b border-zinc-200 bg-[#f8f5ef]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
           <Brand />
 
-          <nav className="hidden rounded-full border border-[#e7e2d8] bg-white/80 p-1 shadow-sm backdrop-blur xl:flex">
+          <nav className="hidden rounded-full border border-zinc-200 bg-white p-1 xl:flex">
             {nav.map(([id, label]) => (
               <button
                 key={id}
@@ -1079,9 +995,9 @@ export default function App() {
             onChange={(e) => {
               const nextRole = e.target.value;
               setRole(nextRole);
-              setPage("home");
+              setPage(nextRole === "lover" ? "discover" : nextRole === "comedian" ? "comic-dashboard" : "booker-dashboard");
             }}
-            className="jf-focus hidden rounded-full border border-[#e7e2d8] bg-white/90 px-4 py-3 text-sm font-black outline-none md:block"
+            className="hidden rounded-full border border-zinc-200 bg-white px-4 py-3 text-sm font-black outline-none md:block"
           >
             <option value="lover">Comedy Lover</option>
             <option value="comedian">Comedian</option>
