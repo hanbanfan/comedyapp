@@ -29,3 +29,18 @@ dist-ssr
 
 .env
 .env.local
+
+# Local Netlify folder
+.netlify
+
+# Local secrets
+.env
+.env.*
+!.env.example
+.env.local
+.env.local.*
+*.save
+
+# Local backup files
+src/App.before-*.jsx
+src/App.messy-before-*.jsx
